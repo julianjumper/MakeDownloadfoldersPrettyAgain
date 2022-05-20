@@ -106,7 +106,7 @@ class File_Handler:
     def __init__(self) -> None:
         self.categories_extensions = load_settings()
         self.run = False
-        # self.check_if_created()
+        self.check_if_created()
         # self.indexing_files()
     def check_if_created (self) -> None:
         for category in self.categories_extensions.keys():
