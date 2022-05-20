@@ -6,7 +6,7 @@ from tkinter import IntVar, StringVar, filedialog
 from tkinter.simpledialog import askstring
 from pystray import MenuItem as item
 import pystray
-from PIL import Image, ImageTk
+from PIL import Image
 from downloadOrganizer import File_Handler
 from win32api import GetSystemMetrics
 

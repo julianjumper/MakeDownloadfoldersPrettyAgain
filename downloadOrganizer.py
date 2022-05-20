@@ -1,7 +1,7 @@
 import os
 import pathlib
 from random import randint
-import sched, time
+import time
 import threading
 import shutil
 
@@ -11,8 +11,8 @@ global downloads_directory
 global destination_directory 
 global interval 
 
-downloads_directory = f'C:/Users/{os.getlogin}/Downloads'
-destination_directory = f'C:/Users/{os.getlogin}/Downloads'
+downloads_directory = f'C:/Users/{os.getlogin()}/Downloads'
+destination_directory = f'C:/Users/{os.getlogin()}/Downloads'
 interval = 5
 
 # Directories, categories & extensions are saved in 'settings.conf'
@@ -31,8 +31,12 @@ def load_settings():
                 continue
             if line[0] == '<' and not line == '\n': # downloads folder from conf-file
                 downloads_directory = line.strip().split('<')[1]
+                if downloads_directory == '': # downloads
+                    downloads_directory = f'C:/Users/{os.getlogin()}/Downloads'
             elif line[0] == '>' and not line == '\n': # destination folder 
                 destination_directory = line.strip().split('>')[1]
+                if destination_directory == '': # downloads
+                    destination_directory = f'C:/Users/{os.getlogin()}/Downloads'
             elif line == '\n': # in case line is empty
                 continue
             elif line_counter % 2 == 0:
