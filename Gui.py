@@ -14,8 +14,8 @@ from win32api import GetSystemMetrics
 
 global runner
 
-width = int ( GetSystemMetrics(0) / 3.5 )
-height = int ( GetSystemMetrics(1) / 2 )  
+width = int ( GetSystemMetrics(0) / 2 )
+height = int ( GetSystemMetrics(1) / 1.8 )  
 
 class GUI(tk.Tk):
     def __init__(self):
@@ -134,7 +134,7 @@ class GUI(tk.Tk):
         
         grid1.grid_columnconfigure(1, weight=1)
         
-        foldersetting_lbl = tk.Label(grid1, text='Folder-Settings', font=('Arial', int ( width / 25 ), 'bold'))
+        foldersetting_lbl = tk.Label(grid1, text='Folder-Settings', font=('Arial', 20, 'bold'))
         foldersetting_lbl.grid(column=0, row=0, padx=20, sticky='w')
 
         downloadfolder_lbl = tk.Label(grid1, text='Select your Download-Folder...', font=('Arial', int ( 10 ), 'bold'))
@@ -157,7 +157,7 @@ class GUI(tk.Tk):
         grid2 = tk.Frame(grid, bd=2)
         grid2.grid(column=0, row=1, padx=0, sticky='w')
         
-        extensionsetting_lbl = tk.Label(grid2, text='Extensions', font=('Arial', int ( width / 25 ), 'bold'))
+        extensionsetting_lbl = tk.Label(grid2, text='Extensions', font=('Arial', int ( 20 ), 'bold'))
         extensionsetting_lbl.grid(column=0, row=0, padx=20, pady=(10, 0), sticky='w')
         
         extensionsetting_btn = tk.Button(grid2, text='?', width=5, command=self.help)
@@ -173,7 +173,7 @@ class GUI(tk.Tk):
         grid3 = tk.Frame(grid, bd=2)
         grid3.grid(column=0, row=2, padx=0, sticky='w')
         
-        miscsettings_lbl = tk.Label(grid3, text='Settings', font=('Arial', int ( width / 25 ), 'bold'))
+        miscsettings_lbl = tk.Label(grid3, text='Settings', font=('Arial', int ( 20 ), 'bold'))
         miscsettings_lbl.grid(column=0, row=0, padx=20, pady=(10, 0), sticky='w')
         
         sub_grid3 = tk.Frame(grid3, bd=2)
