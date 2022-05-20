@@ -122,26 +122,29 @@ class File_Handler:
                     self.move_file(filename)
             time.sleep(int(interval))
     def move_file(self, filename) -> None:
-        suffix = pathlib.Path(filename).suffix.split('.')[1]
-        temp_category = 'Misc'
-        # fetch category 
-        for k, v in self.categories_extensions.items():
-            if v is not None:
-                for i in v:
-                    if i == suffix:
-                        temp_category = k
-                        break
-        # if still empty:
-        if temp_category == '': 
+        try:
+            suffix = pathlib.Path(filename).suffix.split('.')[1]
             temp_category = 'Misc'
-        # move to desired folder
-        if os.path.exists(f'{destination_directory}/Downloaded {temp_category}/{filename}'):
-            full_file = filename.split('.')
-            fname = full_file[0] + str(randint(10, 100000))
-            full_file = fname + '.' + full_file[1]
-            shutil.move(f'{downloads_directory}/{filename}', f'{destination_directory}/Downloaded {temp_category}/{full_file}')
-        else:
-            shutil.move(f'{downloads_directory}/{filename}', f'{destination_directory}/Downloaded {temp_category}/{filename}')
+            # fetch category 
+            for k, v in self.categories_extensions.items():
+                if v is not None:
+                    for i in v:
+                        if i == suffix:
+                            temp_category = k
+                            break
+            # if still empty:
+            if temp_category == '': 
+                temp_category = 'Misc'
+            # move to desired folder
+            if os.path.exists(f'{destination_directory}/Downloaded {temp_category}/{filename}'):
+                full_file = filename.split('.')
+                fname = full_file[0] + str(randint(10, 100000))
+                full_file = fname + '.' + full_file[1]
+                shutil.move(f'{downloads_directory}/{filename}', f'{destination_directory}/Downloaded {temp_category}/{full_file}')
+            else:
+                shutil.move(f'{downloads_directory}/{filename}', f'{destination_directory}/Downloaded {temp_category}/{filename}')
+        except:
+            print('Fehler.')
     def get_download_directory(self) -> str:
         return downloads_directory
     def get_destination_directory(self) -> str:
