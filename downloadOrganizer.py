@@ -47,6 +47,8 @@ def load_settings():
     return categories
 
 def change_download_dir(dir):
+    global downloads_directory
+    downloads_directory = dir
     with open('settings.ini', 'r') as f:
         lines = f.readlines()
         line_counter = 0
@@ -66,6 +68,8 @@ def change_download_dir(dir):
         f.writelines(lines)
 
 def change_destination_dir(dir):
+    global destination_directory
+    destination_directory = dir
     with open('settings.ini', 'r') as f:
         lines = f.readlines()
         line_counter = 0
@@ -102,17 +106,26 @@ def change_interval(interval):
     with open('settings.ini', 'w') as f:
         f.writelines(lines)
 
+def check_autostart():
+    try:
+        file_path = os.path.dirname(os.path.realpath(__file__))
+        if os.path.exists(f'{file_path}/autostart'):
+           return True
+        return False 
+    except:
+        print('Error at check_autostart') # quality coding :)
+
 class File_Handler:
     def __init__(self) -> None:
         self.categories_extensions = load_settings()
+        self.auto_start = check_autostart()
         self.run = False
-        self.check_if_created()
-        # self.indexing_files()
     def check_if_created (self) -> None:
         for category in self.categories_extensions.keys():
             if not os.path.exists(f'{destination_directory}/Downloaded {category}'):
                 os.makedirs(f'{destination_directory}/Downloaded {category}')
     def indexing_files(self) -> None:
+        self.check_if_created()
         while self.run:
             self.down_directory = os.fsencode(downloads_directory)
             for file in os.listdir(self.down_directory):
@@ -122,9 +135,9 @@ class File_Handler:
                     self.move_file(filename)
             time.sleep(int(interval))
     def move_file(self, filename) -> None:
+        temp_category = 'Misc'
         try:
             suffix = pathlib.Path(filename).suffix.split('.')[1]
-            temp_category = 'Misc'
             # fetch category 
             for k, v in self.categories_extensions.items():
                 if v is not None:
@@ -144,7 +157,7 @@ class File_Handler:
             else:
                 shutil.move(f'{downloads_directory}/{filename}', f'{destination_directory}/Downloaded {temp_category}/{filename}')
         except:
-            print('Fehler.')
+            shutil.move(f'{downloads_directory}/{filename}', f'{destination_directory}/Downloaded {temp_category}/{filename}')
     def get_download_directory(self) -> str:
         return downloads_directory
     def get_destination_directory(self) -> str:
@@ -165,12 +178,8 @@ class File_Handler:
         t.start()
     def stop(self):
         self.run = False
-
-
-
-"""
-<Ziel> 
-> Es soll anfangs in einer GUI ausgewaehlt werden koennen, welche Extensions zu welcher Kategorie gehoeren. <
-> Downloads-Ordner soll ebenfalls ausgewaehlt werden koennen < 
-> Ziel-Order ebenso <
-"""
+    def set_autorun(self, state):
+        self.auto_start = state
+    def get_autorun(self):
+        return self.auto_start
+    

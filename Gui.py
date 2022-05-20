@@ -1,11 +1,9 @@
 import getpass
 import os
-import pathlib
 from tkinter import *
 import tkinter as tk
 from tkinter import IntVar, StringVar, filedialog
 from tkinter.simpledialog import askstring
-import tkinter.ttk
 from pystray import MenuItem as item
 import pystray
 from PIL import Image, ImageTk
@@ -23,7 +21,6 @@ class GUI(tk.Tk):
         self.title('Make your Download-Folder great again!')
         self.geometry(f'{width}x{height}')
         self.iconbitmap('./img/icon.ico')
-        # self.resizable(False, False)
         self.download_folder = runner.get_download_directory()
         self.destination_folder = runner.get_destination_directory()
         self.categories_dict = runner.get_categories_extensions()
@@ -31,12 +28,13 @@ class GUI(tk.Tk):
         self.protocol("WM_DELETE_WINDOW", self.hide_window)
         self.grid_columnconfigure(2, weight=1)
         self.setup_gui()
+        if runner.get_autorun() == True:
+            runner.start()
     def update_values(self, current_cat):
         to_add = askstring(f'Add extension', f'Add an extension to category: "{current_cat}"')
         print(f'add {to_add} to {current_cat}')
     def index_categories(self, grid):
         row = 0
-        btn_list = []
         for k, v in runner.get_categories_extensions().items():
             tk.Label(grid, text=f'{k}:', font=('Arial', int ( 10 ), 'bold')).grid(column=0, row=row, padx=(20, 0), pady=(0, 1), sticky='w')
             if v is not None:
@@ -58,11 +56,27 @@ class GUI(tk.Tk):
         print(ext)
         with open(bat_path + '/' + "DownloadsOrganizer.bat", "w+") as bat_file:
             bat_file.write(f'start "" "{file_path}{ext}"')
+        
+        try:
+            if os.path.exists(f'{file_path}/autostart'):
+                return
+            f = open("autostart", "x")
+            f.close() 
+        except:
+            tk.messagebox.showinfo(title='Error', message='Error at setting up autostart.') 
+            
     def deactivate_autostart(self):
+        file_path = os.path.dirname(os.path.realpath(__file__))
         USER_NAME = getpass.getuser()
         bat_path = r'C:/Users/%s/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup' % USER_NAME
         if os.path.exists(bat_path + '/' + "DownloadsOrganizer.bat"):
             os.remove(bat_path + '/' + "DownloadsOrganizer.bat")
+            
+        try:
+            if os.path.exists(f'{file_path}/autostart'):
+                os.remove(f'{file_path}/autostart')
+        except:
+            tk.messagebox.showinfo(title='Error', message='Error at removing autostart.') 
     def done(self):
         runner.set_download_directory(self.download_folder)
         runner.set_destination_directory(self.destination_folder)
@@ -185,3 +199,4 @@ if __name__ == '__main__':
     runner = File_Handler()
     root = GUI()
     root.mainloop()
+    
